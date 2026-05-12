@@ -112,7 +112,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io('/', {
+    const socketUrl = import.meta.env.VITE_API_URL || '/';
+    const socket = io(socketUrl, {
       auth: { token: localStorage.getItem('jwt') },
       reconnection: true,
     });
