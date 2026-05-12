@@ -16,7 +16,7 @@ Therefore, you must separate the frontend from the backend if you wish to use Ve
 ## Recommended Approach
 
 The easiest way to make this app work fully is:
-1.  **Frontend (React/Vite)** -> Deploy to **Vercel**
+1.  **Frontend (React/Vite)** -> Deploy to **Vercel** or **GitHub Pages**
 2.  **Backend (Express/Node)** -> Deploy to **Render**, **Railway**, or **Fly.io**
 
 ---
@@ -36,14 +36,17 @@ The easiest way to make this app work fully is:
    - `CLOUDINARY_API_SECRET` = your_cloudinary_secret (optional)
 6. Deploy the backend and copy the **Render URL** (e.g., `https://my-chat-api.onrender.com`).
 
-### Step 2: Deploying Frontend to Vercel
-1. Go to [Vercel](https://vercel.com/) and create a new project.
-2. Connect your GitHub repository.
-3. In the Build settings, Vercel will automatically detect **Vite**.
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-4. Add this **Environment Variable**:
-   - `VITE_API_URL` = `https://your-backend-url-from-render.onrender.com` *(Replace this with your actual Render URL)*
-5. Deploy. 
+### Step 2: Deploying Frontend to Vercel or GitHub Pages
 
-Vercel will build the frontend, and it will use the `VITE_API_URL` to point all data and WebSocket requests to your newly created Render server. This ensures you get the fast global CDN of Vercel for your UI, and a powerful WebSocket-supported Node.js server on Render for instant chat.
+**For Vercel (Recommended):**
+1. Go to [Vercel](https://vercel.com/) and create a new project.
+2. Select your repository. Important: **Framework Preset should be Vite**.
+3. In the Environment Variables section, add:
+   - `VITE_API_URL` = `https://your-backend-url-from-render.onrender.com`
+4. Deploy.
+
+**For GitHub Pages:**
+1. Go to your repository settings on GitHub.
+2. Under "Pages", set your source configuration.
+3. Because the site now uses Hash routing (e.g. `/#/login`) and relative paths, navigating directly on GitHub Pages will work seamlessly without blank screens or 404s.
+4. **Important:** You still need to let the frontend know where the backend is. Add an Action Secret or an environment variable `VITE_API_URL` pointing to your Render backend to your GitHub Actions build step if you are building via actions, or hardcode it before pushing if you just want to test.

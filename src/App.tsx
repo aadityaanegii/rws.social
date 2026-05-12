@@ -9,13 +9,13 @@ import { create } from 'zustand';
 import { Toaster, toast } from 'react-hot-toast';
 import { useChatStore } from './store/useChatStore';
 
-// Simple router to avoid adding react-router-dom for just 4 pages
+// Simple router to using hash history to support GitHub Pages and Vercel equally well
 export const useRouterStore = create<{ path: string; navigate: (path: string) => void }>((set, get) => ({
-  path: window.location.pathname,
-  navigate: (path) => {
-    if (get().path === path) return;
-    window.history.pushState({}, '', path);
-    set({ path });
+  path: window.location.hash.replace('#', '') || '/',
+  navigate: (newPath) => {
+    if (get().path === newPath) return;
+    window.location.hash = newPath;
+    set({ path: newPath });
   }
 }));
 
@@ -28,9 +28,9 @@ export default function App() {
   useEffect(() => {
     user_checkAuth();
 
-    const handlePopState = () => navigate(window.location.pathname);
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    const handleHashChange = () => navigate(window.location.hash.replace('#', '') || '/');
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, [user_checkAuth, navigate]);
 
   useEffect(() => {
