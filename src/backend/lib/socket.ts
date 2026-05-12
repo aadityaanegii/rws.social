@@ -76,7 +76,10 @@ export function initSocket(server: HTTPServer) {
 }
 
 export function getIO() {
-  if (!io) throw new Error('Socket.io not initialized');
+  if (!io) {
+    console.warn('Socket.io not initialized. Skipping real-time broadcast.');
+    return null;
+  }
   return io;
 }
 

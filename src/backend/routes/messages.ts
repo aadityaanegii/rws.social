@@ -60,8 +60,10 @@ router.post('/send/:id', protectRoute, upload.single('image'), async (req: AuthR
 
     // realtime functionality with socket.io
     const io = getIO();
-    // Emit to both users room
-    io.to(`user_${senderId}`).to(`user_${receiverId}`).emit('new_message', newMessage);
+    if (io) {
+      // Emit to both users room
+      io.to(`user_${senderId}`).to(`user_${receiverId}`).emit('new_message', newMessage);
+    }
 
     res.status(201).json(newMessage);
   } catch (error: any) {

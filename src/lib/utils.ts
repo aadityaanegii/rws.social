@@ -25,8 +25,15 @@ export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || 'Something went wrong');
+    const errorText = await response.text();
+    let errorMessage = 'Something went wrong';
+    try {
+      const errorData = JSON.parse(errorText);
+      if (errorData.message) errorMessage = errorData.message;
+    } catch {
+      errorMessage = `Server Error: ${response.status} ${errorText.substring(0, 100)}`;
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();
