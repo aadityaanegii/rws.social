@@ -27,7 +27,10 @@ app.use(async (req, res, next) => {
       isDBConnected = true;
     } catch (e) {
       console.error('DB Connection Error:', e);
-      return res.status(500).json({ message: 'Database connection failed' });
+      // Return the actual error message so the user can debug (e.g. IP allowlist in MongoDB Atlas)
+      return res.status(500).json({ 
+        message: 'Database connection failed: ' + (e instanceof Error ? e.message : String(e)) 
+      });
     }
   }
   next();
